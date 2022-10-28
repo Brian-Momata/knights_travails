@@ -10,24 +10,28 @@ class GameBoard
     false
   end
   
-  def build_knight_tree(row, col)
-    return if out_of_bounds?([row, col])
-    root = Knight.new([row, col])
-    return if board[row][col] != nil
-    board[row][col] = root
-    if board.all? { |arr| arr.all? } #No nil values
-      board = Array.new(8) { Array.new(8) }
-      return
+  def adjacency_list
+    adjList = {}
+    for row in 0..7 do
+      for col in 0..7 do
+        board[row][col] = [row, col]
+      end
     end
-    root.up_right = build_knight_tree(row - 2, col + 1)
-    root.up_left = build_knight_tree(row - 2, col - 1)
-    root.down_right = build_knight_tree(row + 2, col + 1)
-    root.down_left = build_knight_tree(row + 2, col - 1)
-    root.left_up = build_knight_tree(row - 1, col - 2)
-    root.left_down = build_knight_tree(row + 1, col - 2)
-    root.right_up = build_knight_tree(row - 1, col + 2)
-    root.right_down = build_knight_tree(row + 1, col + 2)
-    root
+    for row in board do
+      for col in row do
+        x, y = col
+        adjList[col] = []
+        adjList[col] << [x - 2, y + 1] if !out_of_bounds?([x - 2, y + 1])
+        adjList[col] << [x - 2, y - 1] if !out_of_bounds?([x - 2, y - 1]) 
+        adjList[col] << [x + 2, y + 1] if !out_of_bounds?([x + 2, y + 1])
+        adjList[col] << [x + 2, y - 1] if !out_of_bounds?([x + 2, y - 1])
+        adjList[col] << [x - 1, y + 2] if !out_of_bounds?([x - 1, y + 2])
+        adjList[col] << [x + 1, y + 2] if !out_of_bounds?([x + 1, y + 2])
+        adjList[col] << [x - 1, y - 2] if !out_of_bounds?([x - 1, y - 2])
+        adjList[col] << [x + 1, y - 2] if !out_of_bounds?([x + 1, y - 2])
+      end
+    end
+    adjList
   end
 end
 
