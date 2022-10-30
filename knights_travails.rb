@@ -33,6 +33,28 @@ class GameBoard
     end
     adjList
   end
+
+  def bfs(graph, source)
+    info = {}
+    graph.keys.each do |key|
+      info[key] = { distance: nil, predecessor: nil }
+    end
+    info[source][:distance] = 0
+
+    queue = Queue.new
+    queue << source
+    while !queue.empty?
+      current = queue.pop
+      graph[current].each do |neighbour|
+        if info[neighbour][:distance] == nil
+          info[neighbour][:distance] = info[current][:distance] + 1
+          info[neighbour][:predecessor] = current
+          queue << neighbour
+        end
+      end
+    end
+    info
+  end
 end
 
 class Knight
