@@ -1,5 +1,6 @@
 class GameBoard
   attr_accessor :board
+
   def initialize
     @board = Array.new(8) { Array.new(8) }
   end
@@ -11,7 +12,7 @@ class GameBoard
   end
   
   def adjacency_list
-    adjList = {}
+    adj_list = {}
     for row in 0..7 do
       for col in 0..7 do
         board[row][col] = [row, col]
@@ -20,23 +21,23 @@ class GameBoard
     for row in board do
       for col in row do
         x, y = col
-        adjList[col] = []
-        adjList[col] << [x - 2, y + 1] if !out_of_bounds?([x - 2, y + 1])
-        adjList[col] << [x - 2, y - 1] if !out_of_bounds?([x - 2, y - 1]) 
-        adjList[col] << [x + 2, y + 1] if !out_of_bounds?([x + 2, y + 1])
-        adjList[col] << [x + 2, y - 1] if !out_of_bounds?([x + 2, y - 1])
-        adjList[col] << [x - 1, y + 2] if !out_of_bounds?([x - 1, y + 2])
-        adjList[col] << [x + 1, y + 2] if !out_of_bounds?([x + 1, y + 2])
-        adjList[col] << [x - 1, y - 2] if !out_of_bounds?([x - 1, y - 2])
-        adjList[col] << [x + 1, y - 2] if !out_of_bounds?([x + 1, y - 2])
+        adj_list[col] = []
+        adj_list[col] << [x - 2, y + 1] if !out_of_bounds?([x - 2, y + 1])
+        adj_list[col] << [x - 2, y - 1] if !out_of_bounds?([x - 2, y - 1]) 
+        adj_list[col] << [x + 2, y + 1] if !out_of_bounds?([x + 2, y + 1])
+        adj_list[col] << [x + 2, y - 1] if !out_of_bounds?([x + 2, y - 1])
+        adj_list[col] << [x - 1, y + 2] if !out_of_bounds?([x - 1, y + 2])
+        adj_list[col] << [x + 1, y + 2] if !out_of_bounds?([x + 1, y + 2])
+        adj_list[col] << [x - 1, y - 2] if !out_of_bounds?([x - 1, y - 2])
+        adj_list[col] << [x + 1, y - 2] if !out_of_bounds?([x + 1, y - 2])
       end
     end
-    adjList
+    adj_list
   end
 
   def bfs(graph, source)
     info = {}
-    graph.keys.each do |key|
+    graph.each_key do |key|
       info[key] = { distance: nil, predecessor: nil }
     end
     info[source][:distance] = 0
@@ -58,14 +59,16 @@ class GameBoard
 
   def knight_moves(start, endpoint)
     return if out_of_bounds?(start) || out_of_bounds?(endpoint)
+    
     graph = adjacency_list
     bfs_info = bfs(graph, start)
     predecessors = []
     predecessors << endpoint
     bfs_info[endpoint][:distance].times do
       last_index = predecessors[-1]
-      predecessors <<  bfs_info[last_index][:predecessor]
+      predecessors << bfs_info[last_index][:predecessor]
     end
+    puts "You made it in #{bfs_info[endpoint][:distance]} moves! Here's your path:"
     p predecessors.reverse
   end
 end
