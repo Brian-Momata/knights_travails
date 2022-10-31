@@ -69,10 +69,3 @@ class GameBoard
     p predecessors.reverse
   end
 end
-
-class Knight
-  attr_accessor :position, :up_right, :up_left, :down_right, :down_left, :left_up, :left_down, :right_up, :right_down
-  def initialize(position)
-    @position = position
-  end
-end
