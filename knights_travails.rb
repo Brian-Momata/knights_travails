@@ -55,6 +55,19 @@ class GameBoard
     end
     info
   end
+
+  def knight_moves(start, endpoint)
+    return if out_of_bounds?(start) || out_of_bounds?(endpoint)
+    graph = adjacency_list
+    bfs_info = bfs(graph, start)
+    predecessors = []
+    predecessors << endpoint
+    bfs_info[endpoint][:distance].times do
+      last_index = predecessors[-1]
+      predecessors <<  bfs_info[last_index][:predecessor]
+    end
+    p predecessors.reverse
+  end
 end
 
 class Knight
